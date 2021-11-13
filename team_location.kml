@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.1">
+<Document>
+    <name><![CDATA[National Basketball Association]]></name>
+    <open>1</open>
+    <Folder>
+        <name><![CDATA[Teams]]></name>
+        <open>1</open>
+        <Placemark>
+            <name><![CDATA[Boston Celtics]]></name>
+            <Point>
+                <coordinates>-71.062228,42.366303,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Brooklyn Nets]]></name>
+            <Point>
+                <coordinates>-73.974689,40.68265,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[New York Knicks]]></name>
+            <Point>
+                <coordinates>-73.993611,40.750556,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Philadelphia 76ers]]></name>
+            <Point>
+                <coordinates>-75.171944,39.901111,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Toronto Raptors]]></name>
+            <Point>
+                <coordinates>-79.379167,43.643333,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Chicago Bulls]]></name>
+            <Point>
+                <coordinates>-87.674167,41.880556,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Cleveland Cavaliers]]></name>
+            <Point>
+                <coordinates>-81.688056,41.496389,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Detroit Pistons]]></name>
+            <Point>
+                <coordinates>-83.245556,42.696944,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Indiana Pacers]]></name>
+            <Point>
+                <coordinates>-86.155556,39.763889,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Milwaukee Bucks]]></name>
+            <Point>
+                <coordinates>-87.916944,43.043611,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Atlanta Hawks]]></name>
+            <Point>
+                <coordinates>-84.396389,33.757222,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Charlotte Hornets]]></name>
+            <Point>
+                <coordinates>-80.839167,35.225,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Miami Heat]]></name>
+            <Point>
+                <coordinates>-80.188056,25.781389,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Orlando Magic]]></name>
+            <Point>
+                <coordinates>-81.383611,28.539167,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Washington Wizards]]></name>
+            <Point>
+                <coordinates>-77.020833,38.898056,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Denver Nuggets]]></name>
+            <Point>
+                <coordinates>-105.0075,39.748611,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Minnesota Timberwolves]]></name>
+            <Point>
+                <coordinates>-93.276111,44.979444,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Oklahoma City Thunder]]></name>
+            <Point>
+                <coordinates>-97.515,35.463333,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Portland Trail Blazers]]></name>
+            <Point>
+                <coordinates>-122.666667,45.531667,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Utah Jazz]]></name>
+            <Point>
+                <coordinates>-111.901111,40.768333,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Golden State Warriors]]></name>
+            <Point>
+                <coordinates>-122.3875,37.768056,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Los Angeles Clippers]]></name>
+            <Point>
+                <coordinates>-118.267222,34.043056,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Phoenix Suns]]></name>
+            <Point>
+                <coordinates>-112.071389,33.445833,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Sacramento Kings]]></name>
+            <Point>
+                <coordinates>-121.518056,38.649167,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Dallas Mavericks]]></name>
+            <Point>
+                <coordinates>-96.810278,32.790556,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Houston Rockets]]></name>
+            <Point>
+                <coordinates>-95.362222,29.750833,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[Memphis Grizzlies]]></name>
+            <Point>
+                <coordinates>-90.050556,35.138333,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[New Orleans Pelicans]]></name>
+            <Point>
+                <coordinates>-90.081944,29.948889,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+        <Placemark>
+            <name><![CDATA[San Antonio Spurs]]></name>
+            <Point>
+                <coordinates>-98.4375,29.426944,0</coordinates>
+            </Point>
+            <Snippet></Snippet>
+            <description><![CDATA[<br>Source: Wikipedia article <a href="https://en.wikipedia.org/wiki/National_Basketball_Association#Teams">National Basketball Association</a>]]></description>
+        </Placemark>
+    </Folder>
+</Document>
+</kml>
