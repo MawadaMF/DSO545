@@ -13,6 +13,7 @@ from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 from datetime import date
 
+import numpy as np
 
 app = dash.Dash(__name__)
 
@@ -23,29 +24,31 @@ data = pd.read_csv('schedule.csv')
 teams=data['opponent_name'].unique()
 
 #list of all unique quarters
-q= pd.PeriodIndex(data.datetime, freq='Q').unique()
+data['quarter']=pd.PeriodIndex(data.datetime, freq='Q')
+q= data['quarter'].unique()
+
 
 app.layout = html.Div([
     
     # top left drop menu for teams
     html.Div([
             dcc.Dropdown(
-                id='xaxis-column',
+                id='team_value',
                 options=[{'label': i, 'value': i} for i in teams],
-#                 value='Fertility rate, total (births per woman)'
+                value='Teams'
             )
     ], style={'width': '48%', 'display': 'inline-block'}), 
     
     # top right drop menu for teams
     html.Div([
             dcc.Dropdown(
-                id='yaxis-column',
+                id='quarter_value',
                 options=[{'label': i.strftime('%YQ%q'), 'value': i.strftime('%YQ%q')} for i in q],
-#                 value='Life expectancy at birth, total (years)'
+                value='Quarter'
             )
     ], style={'width': '48%', 'float': 'right', 'display': 'inline-block'}),
 
-#     dcc.Graph(id='indicator-graphic'),
+#     dcc.Graph(id='cumdist-graphic',
 #     dcc.Slider(
 #         id='year--slider',
 #         min=df['Year'].min(),
@@ -57,27 +60,33 @@ app.layout = html.Div([
 ])
 
 # @app.callback(
-#     Output('indicator-graphic', 'figure'),
-#     Input('xaxis-column', 'value'),
-#     Input('yaxis-column', 'value'),
-#     Input('xaxis-type', 'value'),
-#     Input('yaxis-type', 'value'),
-#     Input('year--slider', 'value'))
-# def update_graph(xaxis_column_name, yaxis_column_name, xaxis_type, yaxis_type, year_value):
+#     Output('cumdist-graphic', 'figure'),
+#     Input('team_value', 'value'),
+#     Input('quarter_value', 'value'))
 
-#     df_year = df[df['Year'] == year_value]
+# def update_graph(team_value, quarter_value):
+    
+#     colors = ['gray']*len(teams)
+#     if team_value !='Teams':
+#         index=np.where(teams == team_value)[0][0]
+#         colors[index]='aqua'
+    
+#     fig = go.Figure()
 
-#     fig = px.scatter(x=df_year[df_year['Indicator Name'] == xaxis_column_name]['Value'],
-#                      y=df_year[df_year['Indicator Name'] == yaxis_column_name]['Value'],
-#                      hover_name=df_year[df_year['Indicator Name'] == yaxis_column_name]['Country Name'])
+#     for i,team in enumerate(teams):
 
-#     fig.update_layout(margin={'l': 40, 'b': 40, 't': 10, 'r': 0}, hovermode='closest')
+#         d=data[data['opponent_name']==team].sort_values(by='datetime')
+#         if quarter_value !='Quarter':
+#             d=d[d['quarter']==quarter_value]
+#         dt=d['distance_traveled']
+#         cd=np.cumsum(dt)
 
-#     fig.update_xaxes(title=xaxis_column_name,
-#                      type='linear' if xaxis_type == 'Linear' else 'log')
-
-#     fig.update_yaxes(title=yaxis_column_name,
-#                      type='linear' if yaxis_type == 'Linear' else 'log')
+#         fig.add_trace(go.Scatter(x = d['datetime'], 
+#                                  y = cd,
+#                                  mode = 'lines',
+#                                  name=team,
+#                                      line = dict(color = colors[i])
+#                                  ))
 
 #     return fig
 
