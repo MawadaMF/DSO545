@@ -39,6 +39,8 @@ app.layout = html.Div(style={'backgroundColor': colors['background']}, children=
         }
     ),
 
+    html.Div()
+
 ])
 
 
