@@ -203,9 +203,11 @@ app.layout = html.Div(
                             }, 
                             'color':'red'
 
-                        }, 
+                        } 
+                    ],
+                    style_table={'height': '560px', 'overflowY': 'auto'}
 
-                    ]
+                    
                     )
                 ])
             ],
