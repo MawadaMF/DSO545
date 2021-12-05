@@ -32,7 +32,7 @@ seasons=data['season'].unique()
 
 
 
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUX])
 
 
 layout = dict(
@@ -61,7 +61,7 @@ app.layout = html.Div(
                     dbc.Col(
 
                         html.Img(src=Image.open('nba_logo.png'), style={
-                                        "height": "80px",
+                                        "height": "50px",
                                         "width": "auto",
                                     }), md='auto', width='auto'
 
@@ -71,7 +71,7 @@ app.layout = html.Div(
 
                         html.H1(' NBA Schedule Dashboard', 
                             style={'color': 'white', 
-                                    'fontSize': '60px',
+                                    'fontSize': '40px',
 
                                     }), md=True
 
@@ -94,7 +94,7 @@ app.layout = html.Div(
 
             dbc.CardBody([
 
-                html.Div([html.H4('Select Team', style = {'fontSize':'18px'})]), 
+                html.Div([html.H4('Select Team', style = {'fontSize':'18px', 'margin-bottom':'15px'})]), 
 
                 html.Div([
                     dcc.Dropdown(
@@ -102,11 +102,11 @@ app.layout = html.Div(
                         options=sorted([{'label': teams[i], 'value': team_abbr[i]} for i in range(len(teams))], key = lambda x: x['label']),
                         value='ATL'
                                 )
-                        ], style={'width': '85%', 'vertical-align': 'top','display': 'inline-block'}), 
+                        ], style={'width': '85%', 'vertical-align': 'top','display': 'inline-block', 'margin-bottom':'15px'}), 
 
 
 
-                html.Div([html.H4('Select Season', style = {'fontSize':'18px'})]), 
+                html.Div([html.H4('Select Season', style = {'fontSize':'18px', 'margin-bottom':'15px'})]), 
                 
 
                 html.Div([
@@ -115,10 +115,10 @@ app.layout = html.Div(
                         options=[{'label': str(int(s)-1)+'-'+ str(int(s)), 'value': s} for s in seasons],
                         value=2022
                                 )
-                        ], style={'width': '85%', 'float': 'center', 'display': 'inline-block'}),
+                        ], style={'width': '85%', 'float': 'center', 'display': 'inline-block', 'margin-bottom':'15px'}),
 
 
-                html.Div([html.H4('Select Date Range', style = {'fontSize':'18px'})]), 
+                html.Div([html.H4('Select Date Range', style = {'fontSize':'18px', 'margin-bottom':'15px'})]), 
 
 
                 html.Div([
@@ -126,12 +126,12 @@ app.layout = html.Div(
                     id='datepicker',
                     month_format='YYYY MMM'
                         )
-                    ], style={'width': '85%','float': 'center', 'display': 'inline-block'}),
+                    ], style={'width': '85%','float': 'center', 'display': 'inline-block', 'margin-bottom':'15px'}),
 
                 ]),
 
             ],
-            style={"width": "30%", 'padding': '5px 5px 5px 5px', 'vertical-align':'left', 'display':'inline-block'}),
+            style={"width": "30%", 'padding': '5px 5px 5px 5px', 'vertical-align':'left', 'display':'inline-block', 'margin-bottom':'15px'}),
 
         ### Top right box
 
@@ -140,20 +140,20 @@ app.layout = html.Div(
             dbc.CardBody([
                 html.Div([html.H4('Travel Path', style = {'fontSize':'18px'})]), 
 
-                dcc.Graph(id='map'), 
+                dcc.Graph(id='map', style={'margin-bottom':'-10px'}), 
 
 
 
 
                 ])
             ],
-            style={'width':'68%','height':'50vh', 'vertical-align': 'top', 'float': 'right', 'display':'inline-block', 'padding': '5px 5px 5px 5px'}), 
+            style={'width':'68%','height':'50vh', 'vertical-align': 'top', 'float': 'right', 'display':'inline-block', 'padding': '5px 5px 5px 5px', 'margin-bottom':'5px'}), 
 
 
         ### Bottom left box
         dbc.Card([
             dbc.CardBody([
-                html.Div([html.H4('INSERT GRAPHS HERE', style = {'fontSize':'18px'})]), 
+                html.Div([html.H4('Charts', style = {'fontSize':'18px'})]), 
 
 
             dbc.Tabs([
@@ -206,6 +206,8 @@ app.layout = html.Div(
         ### Bottom right box
         dbc.Card([
             dbc.CardBody([
+
+                html.Div([html.H4('Table', style = {'fontSize':'18px'})]),
 
                 dash_table.DataTable(
 
