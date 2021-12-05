@@ -15,6 +15,8 @@ from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 from datetime import date
 from dash.exceptions import PreventUpdate
+import base64
+from PIL import Image
 
 
 data = pd.read_csv('schedule.csv', index_col=0)
@@ -46,12 +48,44 @@ layout = dict(
 
 
 
+
 app.layout = html.Div(
     [
-        html.Div(
-            [
-                html.H2('NBA Schdule Visualization Tool', style={'color': 'lightgrey', 'fontSize': '18px'})
-        ]), 
+
+        dbc.Navbar(
+
+            dbc.Container([
+
+                dbc.Row([
+
+                    dbc.Col(
+
+                        html.Img(src=Image.open('nba_logo.png'), style={
+                                        "height": "80px",
+                                        "width": "auto",
+                                    }), md='auto', width='auto'
+
+                        ), 
+
+                    dbc.Col(
+
+                        html.H1(' NBA Schedule Dashboard', 
+                            style={'color': 'white', 
+                                    'fontSize': '60px',
+
+                                    }), md=True
+
+                        )
+
+
+                    ], justify='start') 
+
+
+                ], fluid=True,id= 'header', 
+                    style={"margin-bottom": "0px", 'color':'blue'}), dark=True, color='#081c2c', sticky='top'
+
+    ),
+
 
         dbc.Card([
 
@@ -68,7 +102,7 @@ app.layout = html.Div(
                         options=sorted([{'label': teams[i], 'value': team_abbr[i]} for i in range(len(teams))], key = lambda x: x['label']),
                         value='ATL'
                                 )
-                        ], style={'width': '85%', 'display': 'inline-block'}), 
+                        ], style={'width': '85%', 'vertical-align': 'top','display': 'inline-block'}), 
 
 
 
@@ -92,19 +126,19 @@ app.layout = html.Div(
                     id='datepicker',
                     month_format='YYYY MMM'
                         )
-                    ], style={'width': '85%', 'float': 'center', 'display': 'inline-block'}),
+                    ], style={'width': '85%','float': 'center', 'display': 'inline-block'}),
 
                 ]),
 
             ],
-            style={"width": "30%", 'padding': '5px 5px 5px 5px'}),
+            style={"width": "30%", 'padding': '5px 5px 5px 5px', 'vertical-align':'left', 'display':'inline-block'}),
 
         ### Top right box
 
         dbc.Card([
 
             dbc.CardBody([
-                html.Div([html.H4('INSERT MAP HERE', style = {'fontSize':'18px'})]), 
+                html.Div([html.H4('Travel Path', style = {'fontSize':'18px'})]), 
 
                 dcc.Graph(id='map'), 
 
@@ -113,7 +147,7 @@ app.layout = html.Div(
 
                 ])
             ],
-            style={'width':'68%', 'float': 'right'}), 
+            style={'width':'68%','height':'50vh', 'vertical-align': 'top', 'float': 'right', 'display':'inline-block', 'padding': '5px 5px 5px 5px'}), 
 
 
         ### Bottom left box
@@ -167,7 +201,7 @@ app.layout = html.Div(
 
                 ])
             ],
-            style={'width':'49%', 'float': 'left'}), 
+            style={'width':'49%', 'float': 'left', 'padding': '5px 5px 5px 5px'}), 
 
         ### Bottom right box
         dbc.Card([
@@ -213,7 +247,7 @@ app.layout = html.Div(
                     )
                 ])
             ],
-            style={'width':'49%', 'float': 'right'}), 
+            style={'width':'49%', 'float': 'right', 'padding': '5px 5px 5px 5px'}), 
     
     
 
@@ -241,6 +275,11 @@ def update_date_range(season_value):
     min_date = df['datetime'].min()
     max_date = df['datetime'].max()
     return min_date, max_date
+
+
+################################################################################################################################
+# Map 
+
 
 @app.callback(
     Output('map', 'figure'),
@@ -288,9 +327,16 @@ def update_graph(team_value, season_value, start_date, end_date):
 
     #plotting 
 
-    fig = px.line_mapbox(df1, lat="lat", lon="lon", zoom=3, height=300)
-    fig.update_layout(mapbox_style="stamen-terrain", mapbox_zoom=4, mapbox_center_lat = 41,
-    margin={"r":0,"t":0,"l":0,"b":0})
+    fig = px.line_mapbox(df1, lat="lat", lon="lon", zoom=3)
+    fig.update_layout(
+            mapbox_style="open-street-map", 
+            mapbox_zoom=3.5, 
+            mapbox_center_lat = 38,
+            mapbox_center_lon = -94, 
+            margin={"r":0,"t":0,"l":0,"b":0}
+
+
+            )
     
     return fig
 
@@ -371,7 +417,7 @@ def update_graph(team_value, season_value, start_date, end_date):
     fig = px.bar(data, x='back_to_back', y='count', color = 'color',
                 hover_data={'color':False, 'back_to_back': False, 'count':False, 'team':True},
                 title =team_value + ' Back-to-Back Games', 
-                labels = {'count': 'Count', 'back_to_back': 'Number of B2B Games'},
+                labels = {'count': 'Number of Teams', 'back_to_back': 'Number of B2B Games'},
                 color_discrete_map = {
                                         'chosen_team': '#5880c4',
                                         'others': '#dedede'
@@ -420,7 +466,7 @@ def update_graph(team_value, season_value, start_date, end_date):
     fig = px.bar(data, x='home', y='count', color = 'color',
                 hover_data={'color':False, 'home': False, 'count':False, 'team':True},
                 title =team_value + ' Home Games', 
-                labels = {'count': 'Count', 'home': 'Number of Home Games'},
+                labels = {'count': 'Number of Teams', 'home': 'Number of Home Games'},
                 color_discrete_map = {
                                         'chosen_team': '#5880c4',
                                         'others': '#dedede'
@@ -470,7 +516,7 @@ def update_graph(team_value, season_value, start_date, end_date):
     fig = px.bar(data, x='away', y='count', color = 'color',
                 hover_data={'color':False, 'away': False, 'count':False, 'team':True},
                 title =team_value + ' Away Games', 
-                labels = {'count': 'Count', 'away': 'Number of Away Games'},
+                labels = {'count': 'Number of Teams', 'away': 'Number of Away Games'},
                 color_discrete_map = {
                                         'chosen_team': '#5880c4',
                                         'others': '#dedede'
@@ -515,7 +561,7 @@ def update_graph(team_value, season_value, start_date, end_date):
     fig = px.bar(data, x='3_in_4', y='count', color = 'color',
                 hover_data={'color':False, '3_in_4': False, 'count':False, 'team':True},
                 title =team_value + ' 3 in 4 Games', 
-                labels = {'count': 'Count', '3_in_4': 'Number of 3-in-4 Games'},
+                labels = {'count': 'Number of Teams', '3_in_4': 'Number of 3-in-4 Games'},
                 color_discrete_map = {
                                         'chosen_team': '#5880c4',
                                         'others': '#dedede'
@@ -560,7 +606,7 @@ def update_graph(team_value, season_value, start_date, end_date):
     fig = px.bar(data, x='4_in_5', y='count', color = 'color',
                 hover_data={'color':False, '4_in_5': False, 'count':False, 'team':True},
                 title =team_value + ' 4 in 5 Games', 
-                labels = {'count': 'Count', '4_in_5': 'Number of 4-in-5 Games'},
+                labels = {'count': 'Number of Teams', '4_in_5': 'Number of 4-in-5 Games'},
                 color_discrete_map = {
                                         'chosen_team': '#5880c4',
                                         'others': '#dedede'
@@ -608,8 +654,8 @@ def update_graph(team_value, season_value,start_date,end_date):
     )
     
     fig.update_layout(title_text =
-                   f"Mean Distance Traveled for {team_value} Season",
-                    title_font_size = 30)
+                   f"Average Distance Traveled Per Trip: {team_value}",
+                    title_font_size = 18)
     color = ['red' if t==team else 'blue' for t in df_dot['team']]
     distances = df_dot['distance_traveled']
     #for dist,col in zip(distances,color):
@@ -644,9 +690,9 @@ def update_graph(team_value, season_value, start_date, end_date):
     
     fig = go.Figure()
     
-    
     df = pd.read_csv('schedule_cd.csv',index_col=0)
     df = df[df['season']==season_value]
+    df['datetime'] = pd.to_datetime(df['datetime'])
     df = df[(df.datetime > start_date) & (df.datetime < end_date)]
     
     #for average
@@ -659,22 +705,26 @@ def update_graph(team_value, season_value, start_date, end_date):
     d=df[df['team']==team_value].sort_values(by='datetime', key=pd.to_datetime)
 
     fig.add_trace(
-        go.Scatter(x = pd.to_datetime(a['datetime']), 
+        go.Scatter(x = a['datetime'], 
                 y = a['cd'],
                 mode = 'lines',
                 line={'color': 'gray'},
-                name='Average',
+                name='League Average',
                 )
     )
 
     fig.add_trace(
-        go.Scatter(x = pd.to_datetime(d['datetime']), 
+        go.Scatter(x = d['datetime'], 
                 y = d['cd'],
                 mode = 'lines',
                 line={'color': 'green'},
                 name=team_value,
                 )
     )
+
+    fig.update_layout(title_text =
+                   f"Cumulative Distance Traveled: {team_value}",
+                    title_font_size = 18)
     
     return fig
 
