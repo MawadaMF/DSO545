@@ -106,6 +106,8 @@ app.layout = html.Div(
             dbc.CardBody([
                 html.Div([html.H4('INSERT MAP HERE', style = {'fontSize':'18px'})]), 
 
+                dcc.Graph(id='map'), 
+
 
 
 
@@ -239,6 +241,63 @@ def update_date_range(season_value):
     min_date = df['datetime'].min()
     max_date = df['datetime'].max()
     return min_date, max_date
+
+@app.callback(
+    Output('map', 'figure'),
+    Input('team_value', 'value'),
+    Input('season_value', 'value'),
+    Input('datepicker', 'start_date'),
+    Input('datepicker', 'end_date'))
+
+def update_graph(team_value, season_value, start_date, end_date): 
+    
+    df=pd.read_csv('schedule.csv')
+    df=df[df['team']==team_value]
+
+    df=df[df['season']==season_value]
+    df = df[(df['datetime'] > start_date) & (df['datetime'] < end_date)]
+
+    df1=df
+    # finding the locations of the team
+    df1['previous_location']= np.NaN
+    df1['previous_location']= df1.team_coords
+
+
+    df1['current_location']=df1[['location','team_coords','opp_coords']].apply(lambda row: row['team_coords'] if row['location']=='Home' else row['opp_coords'],axis =1)
+    df1['previous_location'][1:]=df1['current_location'][:-1]
+
+    df1.reset_index(drop=True, inplace=True)
+
+    #print(df1['previous_location'][0])
+
+    # get list of coordinates
+    list_coord= [df1['previous_location'][0]] + list(df1['current_location'])
+
+    # get lon and lat
+    lat_list=[]
+    long_list=[]
+    for i in range(len(list_coord)):
+        lat_list.append(list_coord[i][1:list_coord[i].index(',')])
+        long_list.append(list_coord[i][(list_coord[i].index(',')+2):-1])
+
+    df1['lat']=lat_list[1:]
+    df1['lon']=long_list[1:]
+    df1['lat']=pd.to_numeric(df1["lat"], downcast="float")
+    df1['lon']=pd.to_numeric(df1["lon"], downcast="float")
+    #df1.head()
+
+    #plotting 
+
+    fig = px.line_mapbox(df1, lat="lat", lon="lon", zoom=3, height=300)
+    fig.update_layout(mapbox_style="stamen-terrain", mapbox_zoom=4, mapbox_center_lat = 41,
+    margin={"r":0,"t":0,"l":0,"b":0})
+    
+    return fig
+
+
+
+
+
 
 
 ################################################################################################################################
@@ -588,7 +647,7 @@ def update_graph(team_value, season_value, start_date, end_date):
     
     df = pd.read_csv('schedule_cd.csv',index_col=0)
     df = df[df['season']==season_value]
-#     df = df[(df.datetime > start_date) & (df.datetime < end_date)]
+    df = df[(df.datetime > start_date) & (df.datetime < end_date)]
     
     #for average
     gb = df.groupby('week')
