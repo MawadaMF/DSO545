@@ -1,7 +1,10 @@
 import pandas as pd
+import numpy as np
 
 # plotly 
 import plotly.express as px
+import plotly.graph_objects as go
+
 
 # dashboards
 import dash
@@ -12,6 +15,7 @@ from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 from datetime import date
 from dash.exceptions import PreventUpdate
+
 
 data = pd.read_csv('schedule.csv', index_col=0)
 
@@ -143,7 +147,16 @@ app.layout = html.Div(
                 dbc.Tab([
                     dcc.Graph(id='4in5_graph'),
                     ], label = '4 In 5'), 
+                
+                # dot graph
+                dbc.Tab([
+                    dcc.Graph(id='Dot_plot') 
+                    ], label = 'Average Distance'),
 
+                # line graph
+                dbc.Tab([
+                    dcc.Graph(id='line_plot') 
+                    ], label = 'Cumulative Distance'),
             ])
 
             
@@ -190,14 +203,17 @@ app.layout = html.Div(
                             }, 
                             'color':'red'
 
-                        }, 
+                        } 
+                    ],
+                    style_table={'height': '560px', 'overflowY': 'auto'}
 
-                    ]
+                    
                     )
                 ])
             ],
             style={'width':'49%', 'float': 'right'}), 
-
+    
+    
 
 
 
@@ -502,11 +518,106 @@ def update_graph(team_value, season_value, start_date, end_date):
     return fig
 
 
+################################################################################################################################
+# Dot Plot
+ 
+@app.callback(
+    Output('Dot_plot', 'figure'),
+    Input('team_value', 'value'),
+    Input('season_value', 'value'),
+    Input('datepicker', 'start_date'),
+    Input('datepicker', 'end_date'))
+def update_graph(team_value, season_value,start_date,end_date):
+    #df_newdata = data_loc[['team','distance_traveled','team']]
+    #df_year = df[df['Year'] == year_value]
+    #filter by the season
+    #groupby the team
+    df = pd.read_csv('schedule.csv',index_col = False)
+    df= df[df['season']==season_value]
+    df = df[df['playoffs']==0] 
+    df = df[(df['datetime'] > start_date) & (df['datetime'] < end_date)]
+    df_dot = df.groupby('team').mean().sort_values('distance_traveled',ascending=False)
+    df_dot.reset_index(inplace=True)
+    team = team_value
+    df_dot['color'] = ['red' if i==team else 'blue' for i in df_dot['team']]
+    #mycolors = ['red' if i==team else 'blue' for i in df_dot['team']]
+    
+    fig = px.scatter(df_dot,x= 'team',y='distance_traveled',color= 'color')
+    fig.update_traces(
+        marker_size=16,
+        selector=dict(mode='markers')
+    )
+    
+    fig.update_layout(title_text =
+                   f"Mean Distance Traveled for {team_value} Season",
+                    title_font_size = 30)
+    color = ['red' if t==team else 'blue' for t in df_dot['team']]
+    distances = df_dot['distance_traveled']
+    #for dist,col in zip(distances,color):
+        #for i,v in enumerate(df_dot['distance_traveled']):
+    for i,v in enumerate(df_dot['distance_traveled']):
+        if v == df_dot.loc[df_dot['team']==team_value,'distance_traveled'].values[0]:
+            fig.add_shape(type='line',
+                              x0 = i, y0 = 0,
+                              y1 = v,
+                              x1 = i,
+                              line=dict(color= 'red', width = 3))
+        else:
+            fig.add_shape(type='line',
+                              x0 = i, y0 = 0,
+                              y1 = v,
+                              x1 = i,
+                              line=dict(color= 'blue', width = 3))
+    fig.update_xaxes(categoryorder='total descending')
+    return fig
 
+################################################################################################################################
+# line Plot
+ 
+@app.callback(
+    Output('line_plot', 'figure'),
+    Input('team_value', 'value'),
+    Input('season_value', 'value'),
+    Input('datepicker', 'start_date'),
+    Input('datepicker', 'end_date'))
 
+def update_graph(team_value, season_value, start_date, end_date):
+    
+    fig = go.Figure()
+    
+    
+    df = pd.read_csv('schedule_cd.csv',index_col=0)
+    df = df[df['season']==season_value]
+#     df = df[(df.datetime > start_date) & (df.datetime < end_date)]
+    
+    #for average
+    gb = df.groupby('week')
+    a=gb.agg({'datetime' : np.min,
+            'cd' : np.mean})
+    a.sort_values(by='datetime', key=pd.to_datetime, inplace=True)
 
+    #for team
+    d=df[df['team']==team_value].sort_values(by='datetime', key=pd.to_datetime)
 
+    fig.add_trace(
+        go.Scatter(x = pd.to_datetime(a['datetime']), 
+                y = a['cd'],
+                mode = 'lines',
+                line={'color': 'gray'},
+                name='Average',
+                )
+    )
 
+    fig.add_trace(
+        go.Scatter(x = pd.to_datetime(d['datetime']), 
+                y = d['cd'],
+                mode = 'lines',
+                line={'color': 'green'},
+                name=team_value,
+                )
+    )
+    
+    return fig
 
 
 # run the app
