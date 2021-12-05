@@ -143,6 +143,11 @@ app.layout = html.Div(
                 dbc.Tab([
                     dcc.Graph(id='4in5_graph'),
                     ], label = '4 In 5'), 
+                
+                # dot graph
+                dbc.Tab([
+                    dcc.Graph(id='Dot_plot') 
+                    ], label = 'Average Distance')
 
             ])
 
@@ -197,7 +202,8 @@ app.layout = html.Div(
                 ])
             ],
             style={'width':'49%', 'float': 'right'}), 
-
+    
+    
 
 
 
@@ -502,9 +508,58 @@ def update_graph(team_value, season_value, start_date, end_date):
     return fig
 
 
-
-
-
+################################################################################################################################
+# Dot Plot
+ 
+@app.callback(
+    Output('Dot_plot', 'figure'),
+    Input('team_value', 'value'),
+    Input('season_value', 'value'),
+    Input('datepicker', 'start_date'),
+    Input('datepicker', 'end_date'))
+def update_graph(team_value, season_value,start_date,end_date):
+    #df_newdata = data_loc[['team','distance_traveled','team']]
+    #df_year = df[df['Year'] == year_value]
+    #filter by the season
+    #groupby the team
+    df = pd.read_csv('schedule.csv',index_col = False)
+    df= df[df['season']==season_value]
+    df = df[df['playoffs']==0] 
+    df = df[(df['datetime'] > start_date) & (df['datetime'] < end_date)]
+    df_dot = df.groupby('team').mean().sort_values('distance_traveled',ascending=False)
+    df_dot.reset_index(inplace=True)
+    team = team_value
+    df_dot['color'] = ['red' if i==team else 'blue' for i in df_dot['team']]
+    #mycolors = ['red' if i==team else 'blue' for i in df_dot['team']]
+    
+    fig = px.scatter(df_dot,x= 'team',y='distance_traveled',color= 'color')
+    fig.update_traces(
+        marker_size=16,
+        selector=dict(mode='markers')
+    )
+    
+    fig.update_layout(title_text =
+                   f"Mean Distance Traveled for {team_value} Season",
+                    title_font_size = 30)
+    color = ['red' if t==team else 'blue' for t in df_dot['team']]
+    distances = df_dot['distance_traveled']
+    #for dist,col in zip(distances,color):
+        #for i,v in enumerate(df_dot['distance_traveled']):
+    for i,v in enumerate(df_dot['distance_traveled']):
+        if v == df_dot.loc[df_dot['team']==team_value,'distance_traveled'].values[0]:
+            fig.add_shape(type='line',
+                              x0 = i, y0 = 0,
+                              y1 = v,
+                              x1 = i,
+                              line=dict(color= 'red', width = 3))
+        else:
+            fig.add_shape(type='line',
+                              x0 = i, y0 = 0,
+                              y1 = v,
+                              x1 = i,
+                              line=dict(color= 'blue', width = 3))
+    fig.update_xaxes(categoryorder='total descending')
+    return fig
 
 
 
