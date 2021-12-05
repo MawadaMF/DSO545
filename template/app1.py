@@ -1,7 +1,10 @@
 import pandas as pd
+import numpy as np
 
 # plotly 
 import plotly.express as px
+import plotly.graph_objects as go
+
 
 # dashboards
 import dash
@@ -12,6 +15,7 @@ from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 from datetime import date
 from dash.exceptions import PreventUpdate
+
 
 data = pd.read_csv('schedule.csv', index_col=0)
 
@@ -147,8 +151,12 @@ app.layout = html.Div(
                 # dot graph
                 dbc.Tab([
                     dcc.Graph(id='Dot_plot') 
-                    ], label = 'Average Distance')
+                    ], label = 'Average Distance'),
 
+                # line graph
+                dbc.Tab([
+                    dcc.Graph(id='line_plot') 
+                    ], label = 'Cumulative Distance'),
             ])
 
             
@@ -561,7 +569,53 @@ def update_graph(team_value, season_value,start_date,end_date):
     fig.update_xaxes(categoryorder='total descending')
     return fig
 
+################################################################################################################################
+# line Plot
+ 
+@app.callback(
+    Output('line_plot', 'figure'),
+    Input('team_value', 'value'),
+    Input('season_value', 'value'),
+    Input('datepicker', 'start_date'),
+    Input('datepicker', 'end_date'))
 
+def update_graph(team_value, season_value, start_date, end_date):
+    
+    fig = go.Figure()
+    
+    
+    df = pd.read_csv('schedule_cd.csv',index_col=0)
+    df = df[df['season']==season_value]
+#     df = df[(df.datetime > start_date) & (df.datetime < end_date)]
+    
+    #for average
+    gb = df.groupby('week')
+    a=gb.agg({'datetime' : np.min,
+            'cd' : np.mean})
+    a.sort_values(by='datetime', key=pd.to_datetime, inplace=True)
+
+    #for team
+    d=df[df['team']==team_value].sort_values(by='datetime', key=pd.to_datetime)
+
+    fig.add_trace(
+        go.Scatter(x = pd.to_datetime(a['datetime']), 
+                y = a['cd'],
+                mode = 'lines',
+                line={'color': 'gray'},
+                name='Average',
+                )
+    )
+
+    fig.add_trace(
+        go.Scatter(x = pd.to_datetime(d['datetime']), 
+                y = d['cd'],
+                mode = 'lines',
+                line={'color': 'green'},
+                name=team_value,
+                )
+    )
+    
+    return fig
 
 
 # run the app
