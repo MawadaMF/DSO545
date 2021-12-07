@@ -815,7 +815,11 @@ def update_graph(team_value, season_value,start_date,end_date):
     #mycolors = ['red' if i==team else 'blue' for i in df_dot['team']]
     
     fig = px.scatter(df_dot,x= 'team',y='distance_traveled',color= 'color', 
-                    labels={'distance_traveled':'Average Distance Traveled (Miles)', 'team':''})
+                    labels={'distance_traveled':'Average Distance Traveled (Miles)', 'team':''},
+                    color_discrete_map = {
+                                        'red': '#5880c4',
+                                        'blue': '#dedede'
+                })
     fig.update_traces(
         marker_size=16,
         selector=dict(mode='markers')
@@ -834,14 +838,15 @@ def update_graph(team_value, season_value,start_date,end_date):
                               x0 = i, y0 = 0,
                               y1 = v,
                               x1 = i,
-                              line=dict(color= 'red', width = 3))
+                              line=dict(color= '#5880c4', width = 3))
         else:
             fig.add_shape(type='line',
                               x0 = i, y0 = 0,
                               y1 = v,
                               x1 = i,
-                              line=dict(color= 'blue', width = 3))
+                              line=dict(color= '#dedede', width = 3))
     fig.update_xaxes(categoryorder='total descending')
+    fig.update_layout({'plot_bgcolor':'white'}, showlegend=False)
     return fig
 
 ################################################################################################################################
@@ -885,7 +890,7 @@ def update_graph(team_value, season_value, start_date, end_date):
         go.Scatter(x = d['datetime'], 
                 y = d['cd'],
                 mode = 'lines',
-                line={'color': 'green'},
+                line={'color': '#5880c4'},
                 name=team_value,
                 )
     )
@@ -893,7 +898,8 @@ def update_graph(team_value, season_value, start_date, end_date):
     fig.update_layout(title_text =
                    f"Cumulative Distance Traveled: {team_value}",
                     title_font_size = 18)
-    
+    fig.update_layout({'plot_bgcolor':'white'})
+    fig.update_layout(yaxis_title = 'Cumulative Distance Traveled (Miles)')
     return fig
 
 
