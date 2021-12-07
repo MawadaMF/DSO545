@@ -32,8 +32,6 @@ seasons=data['season'].unique()
 
 
 
-
-
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUX])
 
 
@@ -255,7 +253,7 @@ app.layout = html.Div(
                 dbc.Tab([
                     dcc.Graph(id='line_plot') 
                     ], label = 'Cumulative Distance'),
-
+                
                 # Home Tab
                 dbc.Tab([
                     dcc.Graph(id='home_graph'),
@@ -439,7 +437,8 @@ def update_team_logo(team_name):
     Input('datepicker', 'end_date'))
 
 def update_graph(team_value, season_value, start_date, end_date): 
-    
+    # arena=pd.read_csv('arena_locations.csv')
+
     df=pd.read_csv('schedule.csv')
     df=df[df['team']==team_value]
 
@@ -474,11 +473,13 @@ def update_graph(team_value, season_value, start_date, end_date):
     df1['lat']=pd.to_numeric(df1["lat"], downcast="float")
     df1['lon']=pd.to_numeric(df1["lon"], downcast="float")
     df1['location_team']=[df1['opponent_abbr'][i] if x=='Away' else df1['team'][i] for i,x in enumerate(df1['location'])]
+
+    #arena_dict={team:arena for team,arena in zip(arena['Team_short'],arena['Arena'])}
     #df1.head()
 
     #plotting 
 
-    fig = px.line_mapbox(df1, lat="lat", lon="lon", zoom=3, hover_name="location_team",height=500)
+    fig = px.line_mapbox(df1, lat="lat", lon="lon", zoom=3, hover_name=arena_dict[df1['location_team']],height=500)
     fig.update_layout(
             mapbox_style="open-street-map", 
             mapbox_zoom=3.5, 
@@ -486,7 +487,11 @@ def update_graph(team_value, season_value, start_date, end_date):
             mapbox_center_lon = -94, 
             margin={"r":0,"t":0,"l":0,"b":0},
             showlegend=False,
-            
+            # hoverlabel=dict(
+            # bgcolor="white",
+            # font_size=16,
+            # font_family="Rockwell"
+    )
 
 
 
@@ -814,8 +819,7 @@ def update_graph(team_value, season_value,start_date,end_date):
     df_dot['color'] = ['red' if i==team else 'blue' for i in df_dot['team']]
     #mycolors = ['red' if i==team else 'blue' for i in df_dot['team']]
     
-    fig = px.scatter(df_dot,x= 'team',y='distance_traveled',color= 'color', 
-                    labels={'distance_traveled':'Average Distance Traveled (Miles)', 'team':''})
+    fig = px.scatter(df_dot,x= 'team',y='distance_traveled',color= 'color')
     fig.update_traces(
         marker_size=16,
         selector=dict(mode='markers')
