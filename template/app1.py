@@ -325,11 +325,12 @@ def update_graph(team_value, season_value, start_date, end_date):
     df1['lon']=long_list[1:]
     df1['lat']=pd.to_numeric(df1["lat"], downcast="float")
     df1['lon']=pd.to_numeric(df1["lon"], downcast="float")
+    df1['location_team']=[df1['opponent_abbr'][i] if x=='Away' else df1['team'][i] for i,x in enumerate(df1['location'])]
     #df1.head()
 
     #plotting 
 
-    fig = px.line_mapbox(df1, lat="lat", lon="lon", zoom=3)
+    fig = px.line_mapbox(df1, lat="lat", lon="lon", zoom=3, hover_name="location_team",height=250)
     fig.update_layout(
             mapbox_style="open-street-map", 
             mapbox_zoom=3.5, 
