@@ -32,6 +32,8 @@ seasons=data['season'].unique()
 
 
 
+
+
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUX])
 
 
@@ -253,7 +255,7 @@ app.layout = html.Div(
                 dbc.Tab([
                     dcc.Graph(id='line_plot') 
                     ], label = 'Cumulative Distance'),
-                
+
                 # Home Tab
                 dbc.Tab([
                     dcc.Graph(id='home_graph'),
@@ -812,7 +814,8 @@ def update_graph(team_value, season_value,start_date,end_date):
     df_dot['color'] = ['red' if i==team else 'blue' for i in df_dot['team']]
     #mycolors = ['red' if i==team else 'blue' for i in df_dot['team']]
     
-    fig = px.scatter(df_dot,x= 'team',y='distance_traveled',color= 'color')
+    fig = px.scatter(df_dot,x= 'team',y='distance_traveled',color= 'color', 
+                    labels={'distance_traveled':'Average Distance Traveled (Miles)', 'team':''})
     fig.update_traces(
         marker_size=16,
         selector=dict(mode='markers')
