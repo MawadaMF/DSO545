@@ -99,7 +99,7 @@ app.layout = html.Div(
                 html.Div([
                     dcc.Dropdown(
                         id='team_value',
-                        options=sorted([{'label': teams[i], 'value': team_abbr[i]} for i in range(len(teams))], key = lambda x: x['label']),
+                        #options=,
                         value='ATL'
                                 )
                         ], style={'width': '85%', 'vertical-align': 'top','display': 'inline-block', 'margin-bottom':'15px'}), 
@@ -259,8 +259,8 @@ app.layout = html.Div(
 )
 
 
-
-
+################################################################################################################################
+# Dynamic update for date range on inital start 
 
 @app.callback(
     Output('datepicker', 'start_date'),
@@ -278,6 +278,25 @@ def update_date_range(season_value):
     min_date = df['datetime'].min()
     max_date = df['datetime'].max()
     return min_date, max_date, min_date, max_date
+
+################################################################################################################################
+#Dynamic update for dropdown teams
+
+@app.callback(
+    Output('team_value', 'options'),
+    Input('season_value', 'value')
+    )
+
+def update_dropdown(season_value): 
+
+    df = pd.read_csv('schedule.csv', index_col=0)
+    df = df[df['season']==season_value]
+    teams=df['opponent_name'].unique()
+    team_abbr = df['opponent_abbr'].unique()
+
+    options = sorted([{'label': teams[i], 'value': team_abbr[i]} for i in range(len(teams))], key = lambda x: x['label'])
+    
+    return options
 
 
 ################################################################################################################################
@@ -331,13 +350,16 @@ def update_graph(team_value, season_value, start_date, end_date):
 
     #plotting 
 
-    fig = px.line_mapbox(df1, lat="lat", lon="lon", zoom=3, hover_name="location_team",height=250)
+    fig = px.line_mapbox(df1, lat="lat", lon="lon", zoom=3, hover_name="location_team",height=500)
     fig.update_layout(
             mapbox_style="open-street-map", 
             mapbox_zoom=3.5, 
             mapbox_center_lat = 38,
             mapbox_center_lon = -94, 
-            margin={"r":0,"t":0,"l":0,"b":0}
+            margin={"r":0,"t":0,"l":0,"b":0},
+            showlegend=False,
+            
+
 
 
             )
