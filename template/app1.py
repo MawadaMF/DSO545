@@ -262,10 +262,11 @@ app.layout = html.Div(
 
 
 
-
 @app.callback(
     Output('datepicker', 'start_date'),
     Output('datepicker', 'end_date'),
+    Output('datepicker', 'min_date_allowed'),
+    Output('datepicker', 'max_date_allowed'),
     Input('season_value', 'value')
     )
 
@@ -276,7 +277,7 @@ def update_date_range(season_value):
     df = df[df['playoffs']==0]
     min_date = df['datetime'].min()
     max_date = df['datetime'].max()
-    return min_date, max_date
+    return min_date, max_date, min_date, max_date
 
 
 ################################################################################################################################
@@ -296,7 +297,7 @@ def update_graph(team_value, season_value, start_date, end_date):
     df=df[df['team']==team_value]
 
     df=df[df['season']==season_value]
-    df = df[(df['datetime'] > start_date) & (df['datetime'] < end_date)]
+    df = df[(df['datetime'] >= start_date) & (df['datetime'] <= end_date)]
 
     df1=df
     # finding the locations of the team
@@ -305,14 +306,14 @@ def update_graph(team_value, season_value, start_date, end_date):
 
 
     df1['current_location']=df1[['location','team_coords','opp_coords']].apply(lambda row: row['team_coords'] if row['location']=='Home' else row['opp_coords'],axis =1)
-    df1['previous_location'][1:]=df1['current_location'][:-1]
+    #df1['previous_location'][1:]=df1['current_location'][:-1]
 
     df1.reset_index(drop=True, inplace=True)
 
     #print(df1['previous_location'][0])
 
     # get list of coordinates
-    list_coord= [df1['previous_location'][0]] + list(df1['current_location'])
+    list_coord= list(df1['current_location'])
 
     # get lon and lat
     lat_list=[]
@@ -321,8 +322,8 @@ def update_graph(team_value, season_value, start_date, end_date):
         lat_list.append(list_coord[i][1:list_coord[i].index(',')])
         long_list.append(list_coord[i][(list_coord[i].index(',')+2):-1])
 
-    df1['lat']=lat_list[1:]
-    df1['lon']=long_list[1:]
+    df1['lat']=lat_list[0:]
+    df1['lon']=long_list[0:]
     df1['lat']=pd.to_numeric(df1["lat"], downcast="float")
     df1['lon']=pd.to_numeric(df1["lon"], downcast="float")
     df1['location_team']=[df1['opponent_abbr'][i] if x=='Away' else df1['team'][i] for i,x in enumerate(df1['location'])]
@@ -340,6 +341,19 @@ def update_graph(team_value, season_value, start_date, end_date):
 
 
             )
+
+    fig.add_trace(go.Scattermapbox(
+        lat=[df1['team_lat'][0]],
+        lon=[df1['team_long'][0]],
+        mode='markers',
+        marker=go.scattermapbox.Marker(
+            size=17,
+            color='rgb(255, 0, 0)',
+            opacity=0.7
+        ),
+        hoverinfo='none'
+        ) 
+        )
     
     return fig
 
@@ -367,7 +381,7 @@ def updateTable(team_value, season_value, start_date, end_date):
     df = df[df['season']==season_value]
     df = df[df['playoffs']==0]
     df = df[df['team']==team_value]
-    df = df[(df['datetime'] > start_date) & (df['datetime'] < end_date)]
+    df = df[(df['datetime'] >= start_date) & (df['datetime'] <= end_date)]
 
     data = df[['datetime', 'team', 'opponent_abbr', 'location', 'result','streak', 'back_to_back', '3_in_4', '4_in_5']]
     data.set_index('datetime', inplace=True)
@@ -407,7 +421,7 @@ def update_graph(team_value, season_value, start_date, end_date):
     df = pd.read_csv('schedule.csv', index_col=0)
     df = df[df['season']==season_value]
     df = df[df['playoffs']==0] 
-    df = df[(df['datetime'] > start_date) & (df['datetime'] < end_date)]
+    df = df[(df['datetime'] >= start_date) & (df['datetime'] <= end_date)]
 
     data = pd.DataFrame(df.groupby('team')['back_to_back'].sum())
 
@@ -453,7 +467,7 @@ def update_graph(team_value, season_value, start_date, end_date):
     df = pd.read_csv('schedule.csv', index_col=0)
     df = df[df['season']==season_value]
     df = df[df['playoffs']==0] 
-    df = df[(df['datetime'] > start_date) & (df['datetime'] < end_date)]
+    df = df[(df['datetime'] >= start_date) & (df['datetime'] <= end_date)]
 
 
     df['home'] = [1 if i == 'Home' else 0 for i in df['location']] 
@@ -503,7 +517,7 @@ def update_graph(team_value, season_value, start_date, end_date):
     df = pd.read_csv('schedule.csv', index_col=0)
     df = df[df['season']==season_value]
     df = df[df['playoffs']==0] 
-    df = df[(df['datetime'] > start_date) & (df['datetime'] < end_date)]
+    df = df[(df['datetime'] >= start_date) & (df['datetime'] <= end_date)]
 
 
     df['away'] = [1 if i == 'Away' else 0 for i in df['location']] 
@@ -551,7 +565,7 @@ def update_graph(team_value, season_value, start_date, end_date):
     df = pd.read_csv('schedule.csv', index_col=0)
     df = df[df['season']==season_value]
     df = df[df['playoffs']==0] 
-    df = df[(df['datetime'] > start_date) & (df['datetime'] < end_date)]
+    df = df[(df['datetime'] >= start_date) & (df['datetime'] <= end_date)]
 
     data = pd.DataFrame(df.groupby('team')['3_in_4'].sum())
 
@@ -596,7 +610,7 @@ def update_graph(team_value, season_value, start_date, end_date):
     df = pd.read_csv('schedule.csv', index_col=0)
     df = df[df['season']==season_value]
     df = df[df['playoffs']==0] 
-    df = df[(df['datetime'] > start_date) & (df['datetime'] < end_date)]
+    df = df[(df['datetime'] >= start_date) & (df['datetime'] <= end_date)]
 
     data = pd.DataFrame(df.groupby('team')['4_in_5'].sum())
 
@@ -643,7 +657,7 @@ def update_graph(team_value, season_value,start_date,end_date):
     df = pd.read_csv('schedule.csv',index_col = False)
     df= df[df['season']==season_value]
     df = df[df['playoffs']==0] 
-    df = df[(df['datetime'] > start_date) & (df['datetime'] < end_date)]
+    df = df[(df['datetime'] >= start_date) & (df['datetime'] <= end_date)]
     df_dot = df.groupby('team').mean().sort_values('distance_traveled',ascending=False)
     df_dot.reset_index(inplace=True)
     team = team_value
@@ -696,7 +710,7 @@ def update_graph(team_value, season_value, start_date, end_date):
     df = pd.read_csv('schedule_cd.csv',index_col=0)
     df = df[df['season']==season_value]
     df['datetime'] = pd.to_datetime(df['datetime'])
-    df = df[(df.datetime > start_date) & (df.datetime < end_date)]
+    df = df[(df.datetime >= start_date) & (df.datetime <= end_date)]
     
     #for average
     gb = df.groupby('week')
