@@ -94,6 +94,22 @@ app.layout = html.Div(
 
             dbc.CardBody([
 
+
+                dbc.Row([
+
+                    dbc.Col(
+                        html.Div([html.H4('Atlanda Hawks', className="team_name", style = {'fontSize':'18px', 'margin-bottom':'15px'})]), 
+                        )
+
+                    ]),
+
+
+
+
+
+
+
+
                 html.Div([html.H4('Select Team', style = {'fontSize':'18px', 'margin-bottom':'15px'})]), 
 
                 html.Div([
@@ -142,7 +158,9 @@ app.layout = html.Div(
         dbc.Card(
             dbc.CardBody(
                 [   #dbc.CardHeader("Winning Percentage"),
-                    html.P("Winning Percentage", className="card-title"),
+                    html.P("Winning Percentage", className="card-title", 
+                        style={'color': 'white', 
+                                    'fontSize': '18px'}),
                     html.H5(id='win_percent',
                         className="card-text",
                         style={'color': 'white', 
@@ -155,7 +173,9 @@ app.layout = html.Div(
         dbc.Card(
             dbc.CardBody(
                 [
-                    html.P("Average Distance", className="card-title"),
+                    html.P("Average Distance", className="card-title", 
+                        style={'color': 'white', 
+                                    'fontSize': '18px'}),
                     html.H5(id='metric_avg_dist',
                         style={'color': 'white', 
                                     'fontSize': '25px'}
@@ -168,7 +188,9 @@ app.layout = html.Div(
         dbc.Card(
             dbc.CardBody(
                 [
-                    html.P("Total Distance", className="card-title"),
+                    html.P("Total Distance", className="card-title", 
+                        style={'color': 'white', 
+                                    'fontSize': '18px'}),
                     html.H5(id='metric_total_distance',
                         style={'color': 'white', 
                                     'fontSize': '25px'}
