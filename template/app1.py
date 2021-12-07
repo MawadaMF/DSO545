@@ -98,7 +98,18 @@ app.layout = html.Div(
                 dbc.Row([
 
                     dbc.Col(
-                        html.Div([html.H4('Atlanda Hawks', className="team_name", style = {'fontSize':'18px', 'margin-bottom':'15px'})]), 
+
+                        html.Img(id='team_logo', style={
+                                        "height": "75px",
+                                        "width": "auto",
+                                        'margin-bottom':'50px',
+                                        'display': 'inline-block'
+                                    }), md='auto', width='auto'
+
+                        ),
+
+                    dbc.Col(
+                        html.Div([html.H4(id='team_name', style = {'fontSize':'40px', 'margin-bottom':'15px', 'display': 'inline-block'})]), 
                         )
 
                     ]),
@@ -232,7 +243,17 @@ app.layout = html.Div(
 
             dbc.Tabs([
 
-            
+                
+                # dot graph
+                dbc.Tab([
+                    dcc.Graph(id='Dot_plot') 
+                    ], label = 'Average Distance'),
+
+                # line graph
+                dbc.Tab([
+                    dcc.Graph(id='line_plot') 
+                    ], label = 'Cumulative Distance'),
+                
                 # Home Tab
                 dbc.Tab([
                     dcc.Graph(id='home_graph'),
@@ -258,15 +279,7 @@ app.layout = html.Div(
                     dcc.Graph(id='4in5_graph'),
                     ], label = '4 In 5'), 
                 
-                # dot graph
-                dbc.Tab([
-                    dcc.Graph(id='Dot_plot') 
-                    ], label = 'Average Distance'),
-
-                # line graph
-                dbc.Tab([
-                    dcc.Graph(id='line_plot') 
-                    ], label = 'Cumulative Distance'),
+                
             ])
 
             
@@ -371,6 +384,45 @@ def update_dropdown(season_value):
     options = sorted([{'label': teams[i], 'value': team_abbr[i]} for i in range(len(teams))], key = lambda x: x['label'])
     
     return options
+
+
+################################################################################################################################
+#Dynamic update Team Name Title
+
+@app.callback(
+    Output('team_name', 'children'),
+    Input('team_value', 'value')
+    )
+
+def update_team_name(team_name): 
+
+    df = pd.read_csv('schedule.csv', index_col=0)
+    teams=df['opponent_name'].unique()
+    team_abbr = df['opponent_abbr'].unique()
+
+    name = df[df['opponent_abbr']==team_name]['opponent_name'].unique()[0]
+    
+    return name
+
+################################################################################################################################
+# Dynamic update team logo
+
+@app.callback(
+    Output('team_logo', 'src'),
+    Input('team_value', 'value')
+    )
+
+def update_team_logo(team_name): 
+
+    image_path = 'team_logos/' + team_name + '.png'
+
+    image = Image.open(image_path)
+    return image
+
+
+
+
+
 
 
 ################################################################################################################################
