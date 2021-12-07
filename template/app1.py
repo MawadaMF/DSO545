@@ -131,13 +131,65 @@ app.layout = html.Div(
                 ]),
 
             ],
-            style={"width": "30%", 'padding': '5px 5px 5px 5px', 'vertical-align':'left', 'display':'inline-block', 'margin-bottom':'15px'}),
+            style={"width": "30%", 'height':'60vh','padding': '5px 5px 5px 5px', 'vertical-align':'left', 'display':'inline-block', 'margin-bottom':'15px'}),
 
         ### Top right box
 
         dbc.Card([
 
+                dbc.CardGroup(
+        [
+        dbc.Card(
+            dbc.CardBody(
+                [   #dbc.CardHeader("Winning Percentage"),
+                    html.P("Winning Percentage", className="card-title"),
+                    html.H5(id='win_percent',
+                        className="card-text",
+                        style={'color': 'white', 
+                                    'fontSize': '25px'}
+                    ),
+                ]
+            ),
+            color='#20448c', inverse=True, style={"outline": "solid white"}
+        ),
+        dbc.Card(
+            dbc.CardBody(
+                [
+                    html.P("Average Distance", className="card-title"),
+                    html.H5(id='metric_avg_dist',
+                        style={'color': 'white', 
+                                    'fontSize': '25px'}
+                    ),
+                ]
+                 
+            ),
+            color='#20448c', inverse=True, style={"outline": "solid white"}
+        ),
+        dbc.Card(
+            dbc.CardBody(
+                [
+                    html.P("Total Distance", className="card-title"),
+                    html.H5(id='metric_total_distance',
+                        style={'color': 'white', 
+                                    'fontSize': '25px'}
+                    ),
+                ]
+            ),
+            color='#20448c', inverse=True, style = {"outline": "solid white"}
+        ),
+            
+    ]
+),
+
+
+
+
+
+
+
             dbc.CardBody([
+
+
                 html.Div([html.H4('Travel Path', style = {'fontSize':'18px'})]), 
 
                 dcc.Graph(id='map', style={'margin-bottom':'-10px'}), 
@@ -147,7 +199,7 @@ app.layout = html.Div(
 
                 ])
             ],
-            style={'width':'68%','height':'50vh', 'vertical-align': 'top', 'float': 'right', 'display':'inline-block', 'padding': '5px 5px 5px 5px', 'margin-bottom':'5px'}), 
+            style={'width':'68%','height':'60vh', 'vertical-align': 'top', 'float': 'right', 'display':'inline-block', 'padding': '5px 5px 5px 5px', 'margin-bottom':'5px'}), 
 
 
         ### Bottom left box
@@ -222,7 +274,7 @@ app.layout = html.Div(
                     sort_action='native',
                     style_header={
                         'fontWeight': 'bold',
-                        'backgroundColor': '#5880c4',
+                        'backgroundColor': '#20448c',
                         'color': 'white'
                     }, 
                     style_data_conditional=[
@@ -766,6 +818,70 @@ def update_graph(team_value, season_value, start_date, end_date):
                     title_font_size = 18)
     
     return fig
+
+
+@app.callback(
+    Output('win_percent', 'children'),
+    Input('team_value', 'value'),
+    Input('season_value', 'value'),
+    Input('datepicker', 'start_date'),
+    Input('datepicker', 'end_date'))
+
+def updateWins(team_value,season_value,start_date,end_date):
+    df = pd.read_csv('schedule.csv', index_col=0)
+    df = df[df['season']==season_value]
+    df = df[df['playoffs']==0]
+    df = df[df['team']==team_value]
+    df = df[(df['datetime'] > start_date) & (df['datetime'] < end_date)]
+    df['# Wins'] = [1 if r=='Win' else 0 for r in df['result']]
+    win_percentage = round(df['# Wins'].sum()/len(df['# Wins']),2) * 100
+    statement=f'{round(win_percentage,2)}%'
+    #statement = f'The winning percentage for {team_value} is {win_percentage}%'
+    
+    return statement
+
+@app.callback(
+    Output('metric_avg_dist', 'children'),
+    Input('team_value', 'value'),
+    Input('season_value', 'value'),
+    Input('datepicker', 'start_date'),
+    Input('datepicker', 'end_date'))
+
+def updateAvgDist(team_value,season_value,start_date,end_date):
+    df = pd.read_csv('schedule.csv',index_col = False)
+    df= df[df['season']==season_value]
+    df = df[df['playoffs']==0] 
+    df = df[(df['datetime'] > start_date) & (df['datetime'] < end_date)]
+    df = df[df['team']==team_value]
+    avg_dist = round(df['distance_traveled'].mean(),2)
+    statement = f'{avg_dist}miles'
+    #statement = f'The average distance traveled for {team_value} in the {season_value-1}-{season_value} season was {avg_dist} miles'
+    
+    return statement
+
+@app.callback(
+    Output('metric_total_distance', 'children'),
+    Input('team_value', 'value'),
+    Input('season_value', 'value'),
+    Input('datepicker', 'start_date'),
+    Input('datepicker', 'end_date'))
+
+def updateTotDist(team_value,season_value,start_date,end_date):
+    df = pd.read_csv('schedule.csv',index_col = False)
+    df= df[df['season']==season_value]
+    df = df[df['playoffs']==0] 
+    df = df[(df['datetime'] > start_date) & (df['datetime'] < end_date)]
+    df = df[df['team']==team_value]
+    tot_dist = round(df['distance_traveled'].sum(),2)
+    statement=f'{tot_dist}miles'
+    #statement = f'The average distance traveled for {team_value} in the {season_value-1}-{season_value} season was {tot_dist} miles'
+    
+    return statement
+
+
+
+
+
 
 
 # run the app
