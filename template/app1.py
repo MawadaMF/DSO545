@@ -903,7 +903,7 @@ def update_graph(team_value, season_value, start_date, end_date):
     #for average
 
 
-    a=df.groupby('datetime')['cd','season'].apply(np.mean)
+    a=df.groupby('datetime')['cd','season'].apply(np.mean).sort_values(by='datetime', key=pd.to_datetime)
     gb = df.groupby('datetime')
     #a=gb.agg({'datetime' : np.mean,
     #        'cd' : np.mean})
