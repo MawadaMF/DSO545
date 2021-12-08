@@ -439,11 +439,18 @@ def update_team_logo(team_name):
     Input('datepicker', 'end_date'))
 
 def update_graph(team_value, season_value, start_date, end_date): 
-    
-    df=pd.read_csv('schedule.csv')
+
+    token ='pk.eyJ1IjoibWVpbGFubG9oIiwiYSI6ImNrd3dubW94NjA1MzMybm5yeXN4bzRtb2oifQ.FZT8TI2FgDZA1rYWGoRLhw'
+
+    arena = pd.read_csv('arena_locations.csv',index_col=0)
+
+
+    df=pd.read_csv('schedule.csv',index_col=0)
     df=df[df['team']==team_value]
 
     df=df[df['season']==season_value]
+
+    df=df[df['playoffs']==0]
     df = df[(df['datetime'] >= start_date) & (df['datetime'] <= end_date)]
 
     df1=df
@@ -454,20 +461,31 @@ def update_graph(team_value, season_value, start_date, end_date):
 
     df1['current_location']=df1[['location','team_coords','opp_coords']].apply(lambda row: row['team_coords'] if row['location']=='Home' else row['opp_coords'],axis =1)
     #df1['previous_location'][1:]=df1['current_location'][:-1]
+    
+
 
     df1.reset_index(drop=True, inplace=True)
+
 
     #print(df1['previous_location'][0])
 
     # get list of coordinates
     list_coord= list(df1['current_location'])
 
+    #print(list_coord)
+
     # get lon and lat
     lat_list=[]
     long_list=[]
     for i in range(len(list_coord)):
-        lat_list.append(list_coord[i][1:list_coord[i].index(',')])
-        long_list.append(list_coord[i][(list_coord[i].index(',')+2):-1])
+        lat_list.append(list_coord[i][2:list_coord[i].index(',')-1])
+        long_list.append(list_coord[i][(list_coord[i].index(',')+3):-2])
+
+
+    #print(lat_list)
+
+    "'34.435243'"
+    
 
     df1['lat']=lat_list[0:]
     df1['lon']=long_list[0:]
@@ -475,12 +493,26 @@ def update_graph(team_value, season_value, start_date, end_date):
     df1['lon']=pd.to_numeric(df1["lon"], downcast="float")
     df1['location_team']=[df1['opponent_abbr'][i] if x=='Away' else df1['team'][i] for i,x in enumerate(df1['location'])]
     #df1.head()
+    
+    print(df1['location_team'])
+
+    #print(df1['location_team'])
+
+    df1['arena_name'] = df1['location_team'].map(lambda team: arena.loc[team,'Arena'])
+    df1['City'] = df1['location_team'].map(lambda team: arena.loc[team,'Location'][:arena.loc[team,'Location'].index(',')])
+    df1['State'] = df1['location_team'].map(lambda team: arena.loc[team,'Location'][arena.loc[team,'Location'].index(',')+1:])
 
     #plotting 
 
-    fig = px.line_mapbox(df1, lat="lat", lon="lon", zoom=3, hover_name="location_team",height=500)
+    fig = px.line_mapbox(df1, lat="lat", lon="lon", zoom=3, 
+                            hover_data= {'lat':False, 'lon':False,'City':True, 'State':True},
+                            #{'lat':False, 'lon':False, 'arena_name':True},
+                            hover_name = "arena_name",
+                            height=500,
+                            color_discrete_sequence = ['#5880c4'])
     fig.update_layout(
-            mapbox_style="open-street-map", 
+            mapbox_style="light", 
+            mapbox_accesstoken=token,
             mapbox_zoom=3.5, 
             mapbox_center_lat = 38,
             mapbox_center_lon = -94, 
@@ -869,16 +901,20 @@ def update_graph(team_value, season_value, start_date, end_date):
     df = df[(df.datetime >= start_date) & (df.datetime <= end_date)]
     
     #for average
-    gb = df.groupby('week')
-    a=gb.agg({'datetime' : np.min,
-            'cd' : np.mean})
-    a.sort_values(by='datetime', key=pd.to_datetime, inplace=True)
+
+
+    a=df.groupby('datetime')['cd','season'].apply(np.mean)
+    gb = df.groupby('datetime')
+    #a=gb.agg({'datetime' : np.mean,
+    #        'cd' : np.mean})
+    #a.sort_values(by='datetime', key=pd.to_datetime, inplace=True)
+
 
     #for team
     d=df[df['team']==team_value].sort_values(by='datetime', key=pd.to_datetime)
 
     fig.add_trace(
-        go.Scatter(x = a['datetime'], 
+        go.Scatter(x = a.index, 
                 y = a['cd'],
                 mode = 'lines',
                 line={'color': 'gray'},
