@@ -847,7 +847,8 @@ def update_graph(team_value, season_value,start_date,end_date):
     #mycolors = ['red' if i==team else 'blue' for i in df_dot['team']]
     
     fig = px.scatter(df_dot,x= 'team',y='distance_traveled',color= 'color', 
-                    labels={'distance_traveled':'Average Distance Traveled (Miles)', 'team':''},
+                    hover_data = {'color':False}, 
+                    labels={'distance_traveled':'Average Distance Traveled (Miles)', 'team':'Team'},
                     color_discrete_map = {
                                         'red': '#5880c4',
                                         'blue': '#dedede'
@@ -953,7 +954,7 @@ def updateWins(team_value,season_value,start_date,end_date):
     df = df[df['team']==team_value]
     df = df[(df['datetime'] > start_date) & (df['datetime'] < end_date)]
     df['# Wins'] = [1 if r=='Win' else 0 for r in df['result']]
-    win_percentage = round(df['# Wins'].sum()/len(df['# Wins']),2) * 100
+    win_percentage = round(df['# Wins'].sum()/df['result'].notna().sum(),2) * 100
     statement=f'{round(win_percentage,2)}%'
     #statement = f'The winning percentage for {team_value} is {win_percentage}%'
     
