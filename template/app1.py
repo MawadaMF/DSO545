@@ -160,7 +160,7 @@ app.layout = html.Div(
                 ]),
 
             ],
-            style={"width": "30%", 'height':'60vh','padding': '5px 5px 5px 5px', 'vertical-align':'left', 'display':'inline-block', 'margin-bottom':'15px'}),
+            style={"width": "30%", 'height':'45vh','padding': '5px 5px 5px 5px', 'vertical-align':'left', 'display':'inline-block', 'margin-bottom':'15px'}),
 
         ### Top right box
 
@@ -234,7 +234,7 @@ app.layout = html.Div(
 
                 ])
             ],
-            style={'width':'68%','height':'60vh', 'vertical-align': 'top', 'float': 'right', 'display':'inline-block', 'padding': '5px 5px 5px 5px', 'margin-bottom':'5px'}), 
+            style={'width':'68%','height':'45vh', 'vertical-align': 'top', 'float': 'right', 'display':'inline-block', 'padding': '5px 5px 5px 5px', 'margin-bottom':'5px'}), 
 
 
         ### Bottom left box
@@ -508,12 +508,12 @@ def update_graph(team_value, season_value, start_date, end_date):
                             hover_data= {'lat':False, 'lon':False,'City':True, 'State':True},
                             #{'lat':False, 'lon':False, 'arena_name':True},
                             hover_name = "arena_name",
-                            height=275,
+                            height=550,
                             color_discrete_sequence = ['#5880c4'])
     fig.update_layout(
             mapbox_style="light", 
             mapbox_accesstoken=token,
-            mapbox_zoom=2, 
+            mapbox_zoom=3.5, 
             mapbox_center_lat = 38,
             mapbox_center_lon = -94, 
             margin={"r":0,"t":0,"l":0,"b":0},
@@ -914,14 +914,14 @@ def update_graph(team_value, season_value, start_date, end_date):
     #for team
     d=df[df['team']==team_value].sort_values(by='datetime', key=pd.to_datetime)
 
-    # fig.add_trace(
-    #     go.Scatter(x = a.index, 
-    #             y = a['cd'],
-    #             mode = 'lines',
-    #             line={'color': 'gray'},
-    #             name='League Average',
-    #             )
-    # )
+    fig.add_trace(
+        go.Scatter(x = a.index, 
+                y = a['cd'],
+                mode = 'lines',
+                line={'color': 'rgba(222, 222, 221, 0.8)'},
+                name='League Average',
+                )
+    )
 
     fig.add_trace(
         go.Scatter(x = d['datetime'], 
